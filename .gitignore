@@ -11,3 +11,10 @@ buildNumber.properties
 
 .project
 .classpath
+
+*.swp
+*.swo
+*~
+.netrwhist
+undo/
+.nvim.lua
