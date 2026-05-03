@@ -1,5 +1,33 @@
 # UC07 - Register Payment Method
 
+## Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant System
+    participant Database
+
+    User->>System: Prompt to register a new payment method
+    activate System
+    System-->>User: Request payment method name
+    deactivate System
+
+    User->>System: Provide payment method name
+    activate System
+
+    alt 2a. Payment method name is invalid
+        System-->>User: Notify invalid name and prompt to try again
+    else Name is valid
+        System->>Database: Save payment method
+        activate Database
+        Database-->>System: Confirm save
+        deactivate Database
+        System-->>User: Notify success
+    end
+    deactivate System
+```
+
 | Field                | Description |
 |----------------------|-------------|
 | **Goal**             | Register a new payment method to be used when logging in a payment |

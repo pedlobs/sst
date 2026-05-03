@@ -1,5 +1,60 @@
 # UC08 - Log Payment
 
+## Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant System
+    participant Database
+
+    User->>System: Prompt to log a payment
+    activate System
+    rect rgb(230, 230, 230)
+        Note over User,Database: ref - UC04: View Subscription Catalog
+    end
+    System-->>User: Request subscription name
+    deactivate System
+
+    User->>System: Provide subscription name
+    activate System
+
+    System->>Database: Query subscription by name
+    activate Database
+    Database-->>System: Return query result
+    deactivate Database
+
+    alt 3a. Subscription does not exist
+        System-->>User: Notify invalid name and prompt to try again
+    else Subscription exists
+        System-->>User: Request payment method
+        deactivate System
+
+        User->>System: Provide payment method
+        activate System
+
+        alt 4a. Payment method is invalid
+            System-->>User: Notify invalid method and prompt to try again
+        else 4b. Payment method does not exist
+            rect rgb(230, 230, 230)
+                Note over User,Database: <<extend>> UC07: Register Payment Method
+            end
+            System->>Database: Save payment and update last billing date
+            activate Database
+            Database-->>System: Confirm save
+            deactivate Database
+            System-->>User: Notify success
+        else Payment method exists
+            System->>Database: Save payment and update last billing date
+            activate Database
+            Database-->>System: Confirm save
+            deactivate Database
+            System-->>User: Notify success
+        end
+    end
+    deactivate System
+```
+
 | Field                | Description |
 |----------------------|-------------|
 | **Goal**             | Register a new payment for a subscription service |

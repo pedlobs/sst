@@ -1,5 +1,37 @@
 # UC11 - View Execution Logs
 
+## Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant System
+    participant Database
+
+    Admin->>System: Prompt to enter system configuration
+    activate System
+    Admin->>System: Prompt to view execution logs
+    deactivate System
+
+    System->>Database: Fetch execution logs
+    activate Database
+    Database-->>System: Return execution logs
+    deactivate Database
+
+    alt 3a. No execution logs exist
+        System-->>Admin: Notify no logs available and return to system configuration
+    else 3b. Fail to connect to database
+        System-->>Admin: Notify technical failure and return to system configuration
+    else Fetch successful
+        System-->>Admin: Display execution logs
+
+        Admin->>System: Prompt to exit logs view
+        activate System
+        System-->>Admin: Return to system configuration
+        deactivate System
+    end
+```
+
 | Field                | Description |
 |----------------------|-------------|
 | **Goal**             | View the system's execution logs |
